@@ -2,70 +2,59 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# Configuración inicial
+# Configurar la página
 st.set_page_config(page_title="Dashboard AluraStore", layout="wide")
-st.title("📊 Dashboard - Alura Store")
 
-# Cargar datos
-@st.cache_data
-def cargar_datos():
-    urls = [
-        "URL_1.csv",
-        "URL_2.csv",
-        "URL_3.csv",
-        "URL_4.csv"
-    ]
-    return [pd.read_csv(url) for url in urls]
+# Título
+st.title("📊 Dashboard AluraStore")
+st.markdown("Análisis general de las tiendas del Sr. Juan.")
 
-tiendas = cargar_datos()
-nombres_tiendas = [f"Tienda {i}" for i in range(1, len(tiendas)+1)]
+# Cargar datos desde los CSV en GitHub
+urls = [
+    "https://raw.githubusercontent.com/alura-es-cursos/challenge1-data-science-latam/main/base-de-datos-challenge1-latam/tienda_1.csv",
+    "https://raw.githubusercontent.com/alura-es-cursos/challenge1-data-science-latam/main/base-de-datos-challenge1-latam/tienda_2.csv",
+    "https://raw.githubusercontent.com/alura-es-cursos/challenge1-data-science-latam/main/base-de-datos-challenge1-latam/tienda_3.csv",
+    "https://raw.githubusercontent.com/alura-es-cursos/challenge1-data-science-latam/main/base-de-datos-challenge1-latam/tienda_4.csv"
+]
+tiendas = [pd.read_csv(url) for url in urls]
+nombres_tiendas = [f"Tienda {i+1}" for i in range(4)]
 
-# Menú de navegación
-menu = st.sidebar.radio("Navegación", [
-    "📈 Facturación",
-    "🛒 Ventas por Categoría",
-    "⭐ Calificación Promedio",
-    "🔥 Productos Más y Menos Vendidos",
-    "🚚 Costo de Envío Promedio"
-])
+# Métricas clave
+st.header("🔍 Métricas Clave")
+col1, col2, col3, col4 = st.columns(4)
 
-# Opciones
-if menu == "📈 Facturación":
-    st.header("📈 Facturación Total por Tienda")
-    ingresos = [tienda['Precio'].astype(float).sum() for tienda in tiendas]
-    for nombre, valor in zip(nombres_tiendas, ingresos):
-        st.write(f"{nombre}: ${valor:,.2f}")
+facturaciones = [df["Precio"].astype(float).sum() for df in tiendas]
+calificaciones = [df["Calificación"].mean() for df in tiendas]
+envios = [df["Costo de envío"].mean() for df in tiendas]
 
-    fig, ax = plt.subplots()
-    ax.bar(nombres_tiendas, ingresos)
-    ax.set_ylabel("USD")
-    ax.set_title("Ingresos Totales por Tienda")
-    st.pyplot(fig)
+col1.metric("Mayor Facturación", f"${max(facturaciones):,.2f}")
+col2.metric("Menor Facturación", f"${min(facturaciones):,.2f}")
+col3.metric("Calificación Promedio Global", f"{sum(calificaciones)/len(calificaciones):.2f}")
+col4.metric("Costo Promedio de Envío Global", f"${sum(envios)/len(envios):.2f}")
 
-elif menu == "🛒 Ventas por Categoría":
-    st.header("🛒 Ventas por Categoría")
-    for i, tienda in enumerate(tiendas, start=1):
-        st.subheader(f"Tienda {i}")
-        ventas = tienda.groupby("Categoría del Producto")['Precio'].sum().sort_values(ascending=False)
-        st.dataframe(ventas)
+# Gráfico: Facturación por tienda
+st.subheader("💵 Ingresos por Tienda")
+fig1, ax1 = plt.subplots()
+ax1.bar(nombres_tiendas, facturaciones)
+ax1.set_ylabel("USD")
+ax1.set_title("Facturación Total por Tienda")
+st.pyplot(fig1)
 
-elif menu == "⭐ Calificación Promedio":
-    st.header("⭐ Calificación Promedio")
-    calificaciones = [tienda['Calificación'].mean() for tienda in tiendas]
-    st.bar_chart(pd.DataFrame({'Tienda': nombres_tiendas, 'Calificación': calificaciones}).set_index('Tienda'))
+# Gráfico: Calificación promedio por tienda
+st.subheader("⭐ Calificación Promedio por Tienda")
+fig2, ax2 = plt.subplots()
+ax2.barh(nombres_tiendas, calificaciones, color='skyblue')
+ax2.set_xlabel("Calificación")
+st.pyplot(fig2)
 
-elif menu == "🔥 Productos Más y Menos Vendidos":
-    st.header("🔥 Productos Más y Menos Vendidos")
-    for i, tienda in enumerate(tiendas, start=1):
-        st.subheader(f"Tienda {i}")
-        productos = tienda.groupby("Producto")["Precio"].sum().sort_values(ascending=False)
-        st.write("Más vendidos:")
-        st.dataframe(productos.head(3))
-        st.write("Menos vendidos:")
-        st.dataframe(productos.tail(3))
+# Gráfico: Costo de envío por tienda
+st.subheader("🚚 Costo Promedio de Envío por Tienda")
+fig3, ax3 = plt.subplots()
+ax3.plot(nombres_tiendas, envios, marker='o', linestyle='--', color='orange')
+ax3.set_ylabel("USD")
+st.pyplot(fig3)
 
-elif menu == "🚚 Costo de Envío Promedio":
-    st.header("🚚 Costo Promedio de Envío por Tienda")
-    costos = [tienda['Costo de envío'].mean() for tienda in tiendas]
-    st.write(pd.DataFrame({'Tienda': nombres_tiendas, 'Costo Promedio': costos}).set_index('Tienda'))
-    st.bar_chart(pd.DataFrame({'Tienda': nombres_tiendas, 'Costo Promedio': costos}).set_index('Tienda'))
+# Recomendación final
+st.markdown("---")
+st.success("✅ **Recomendación:** Vender la Tienda 4 por bajo desempeño general (menor facturación, calificación y volumen de ventas).")
+
