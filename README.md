@@ -18,7 +18,7 @@ Evaluar el desempeño de las tiendas con base en los siguientes indicadores clav
 
 ## Acceso Rápido
 
-[Ver el Dashboard en Streamlit](https://dashboard-alurastore.streamlit.app)
+[Ver el Dashboard en Streamlit]
 
 ---
 
@@ -43,7 +43,7 @@ Evaluar el desempeño de las tiendas con base en los siguientes indicadores clav
 
 1. Clona el repositorio:
    ```bash
-   git clone https://github.com/tu-usuario/nombre-repositorio.git
+   git clone https://github.com/
    cd nombre-repositorio
 
 2. Instala las dependencias:
