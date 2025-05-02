@@ -10,7 +10,6 @@ st.title("📊 Dashboard AluraStore")
 st.markdown("Análisis general de las tiendas del Sr. Juan.")
 
 # Cargar datos desde los CSV en GitHub
-# URLs de las tiendas
 urls = [
     "https://raw.githubusercontent.com/alura-es-cursos/challenge1-data-science-latam/refs/heads/main/base-de-datos-challenge1-latam/tienda_1%20.csv",
     "https://raw.githubusercontent.com/alura-es-cursos/challenge1-data-science-latam/refs/heads/main/base-de-datos-challenge1-latam/tienda_2.csv",
@@ -37,27 +36,31 @@ col4.metric("Costo Promedio de Envío Global", f"${sum(envios)/len(envios):.2f}"
 
 # Gráfico: Facturación por tienda
 st.subheader("💵 Ingresos por Tienda")
-fig1, ax1 = plt.subplots()
-ax1.bar(nombres_tiendas, facturaciones)
+fig1, ax1 = plt.subplots(figsize=(8, 4))
+ax1.bar(nombres_tiendas, facturaciones, color='steelblue')
 ax1.set_ylabel("USD")
-ax1.set_title("Facturación Total por Tienda")
+ax1.set_title("Facturación Total por Tienda", loc='center')
+ax1.spines[['top', 'right']].set_visible(False)
 st.pyplot(fig1)
 
 # Gráfico: Calificación promedio por tienda
 st.subheader("⭐ Calificación Promedio por Tienda")
-fig2, ax2 = plt.subplots()
+fig2, ax2 = plt.subplots(figsize=(8, 3))
 ax2.barh(nombres_tiendas, calificaciones, color='skyblue')
 ax2.set_xlabel("Calificación")
+ax2.set_title("Calificación por Tienda", loc='center')
+ax2.spines[['top', 'right']].set_visible(False)
 st.pyplot(fig2)
 
 # Gráfico: Costo de envío por tienda
 st.subheader("🚚 Costo Promedio de Envío por Tienda")
-fig3, ax3 = plt.subplots()
+fig3, ax3 = plt.subplots(figsize=(8, 3.5))
 ax3.plot(nombres_tiendas, envios, marker='o', linestyle='--', color='orange')
 ax3.set_ylabel("USD")
+ax3.set_title("Costo Promedio por Tienda", loc='center')
+ax3.spines[['top', 'right']].set_visible(False)
 st.pyplot(fig3)
 
 # Recomendación final
 st.markdown("---")
 st.success("✅ **Recomendación:** Vender la Tienda 4 por bajo desempeño general (menor facturación, calificación y volumen de ventas).")
-
