@@ -18,7 +18,7 @@ Evaluar el desempeño de las tiendas con base en los siguientes indicadores clav
 
 ## Acceso Rápido
 
-[Ver el Dashboard en Streamlit]
+[Ver el Dashboard en Streamlit] https://alurastore-dashboard.streamlit.app
 
 ---
 
@@ -43,7 +43,7 @@ Evaluar el desempeño de las tiendas con base en los siguientes indicadores clav
 
 1. Clona el repositorio:
    ```bash
-   git clone https://github.com/
+   git clone https://github.com/Rubensao/alurastore-dashboard
    cd nombre-repositorio
 
 2. Instala las dependencias:
@@ -63,4 +63,5 @@ Después del análisis de datos, se recomienda vender la Tienda 4, ya que presen
 
 ## Autor
 RS
+
 Desafío propuesto por Alura Latam - Oracle Next Education
